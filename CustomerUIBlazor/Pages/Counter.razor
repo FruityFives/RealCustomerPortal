@@ -1,0 +1,160 @@
+﻿@page "/counter"
+@using Models
+@inject HttpClient Http
+
+<h2 class="title">Opret en Bestillingsordre</h2>
+
+<div class="form-container">
+    <form @onsubmit="SubmitOrder">
+        
+        <!-- Kundeinformation -->
+        <div class="form-group">
+            <label>Navn</label>
+            <input type="text" @bind="order.CustomerName" required placeholder="Indtast dit navn"/>
+        </div>
+
+        <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" @bind="order.CustomerEmail" required placeholder="Indtast din e-mail"/>
+        </div>
+
+        <div class="form-group">
+            <label>Telefonnummer</label>
+            <input type="tel" @bind="order.CustomerPhone" required placeholder="+45 12345678"/>
+        </div>
+
+        <!-- Virksomhedsvælger -->
+        <div class="form-group">
+            <label>Vælg virksomhed</label>
+            <select @bind="order.CompanyId">
+                <option value="1">TechCorp A/S</option>
+                <option value="2">E-Trade Solutions</option>
+                <option value="3">Green Logistics</option>
+            </select>
+        </div>
+
+        <!-- Produktliste -->
+        <h3>Produkter</h3>
+        <div class="product-list">
+            @foreach (var item in order.Items)
+            {
+                <div class="product-item">
+                    <input type="text" @bind="item.ProductName" required placeholder="Produkt navn"/>
+                    <input type="number" @bind="item.Quantity" min="1" required placeholder="Antal"/>
+                    <button type="button" @onclick="() => RemoveProduct(item)">❌</button>
+                </div>
+            }
+        </div>
+
+        <button type="button" class="btn btn-secondary" @onclick="AddProduct">➕ Tilføj produkt</button>
+
+        <button type="submit" class="btn btn-primary">📦 Afsend ordre</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <p class="success-message">@message</p>
+    }
+</div>
+
+<style>
+    .form-container {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .product-list {
+        margin-top: 10px;
+    }
+
+    .product-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .product-item input {
+        flex: 1;
+    }
+
+    .btn {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-secondary {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+    }
+
+    .success-message {
+        text-align: center;
+        color: green;
+        margin-top: 15px;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    private Order order = new() { Items = new List<OrderItem>() };
+    private string? message;
+
+    private async Task SubmitOrder()
+    {
+        var response = await Http.PostAsJsonAsync("http://localhost:5025/api/order/postorder", order);
+        message = response.IsSuccessStatusCode ? "✅ Ordren er sendt!" : "❌ Fejl ved afsendelse af ordre.";
+    }
+
+    private void AddProduct()
+    {
+        order.Items.Add(new OrderItem());
+    }
+
+    private void RemoveProduct(OrderItem item)
+    {
+        order.Items.Remove(item);
+    }
+}
