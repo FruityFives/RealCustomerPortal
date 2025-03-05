@@ -11,6 +11,12 @@ namespace CustomerUIAPI.Controllers
     {
         private static List<Order> orders = new List<Order>();
 
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public OrderController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         [HttpGet]
         [Route("getorders")]
@@ -21,18 +27,29 @@ namespace CustomerUIAPI.Controllers
 
         [HttpPost]
         [Route("postorder")]
-        public IActionResult PostOrder([FromBody] Order order)
+        public async Task<IActionResult> PostOrder([FromBody] Order order)
         {
             if (order == null)
             {
                 return NotFound("Fejl i ordren");
             }
-            // Gem ordren i databasen
-            else {
-                orders.Add(order);
+
+            // Opret HTTP-klient
+            var client = _httpClientFactory.CreateClient("MyApiClient");
+
+            // Send POST-anmodning med ordren til ekstern service
+            var response = await client.PostAsJsonAsync("orders", order);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Ordren blev gemt korrekt i den eksterne service
                 return Ok();
             }
-            
+            else
+            {
+                // Håndter fejl fra den eksterne service
+                return StatusCode((int)response.StatusCode, "Fejl ved oprettelse af ordre");
+            }
         }
     }
 }
