@@ -1,0 +1,6 @@
+@CustomerUIAPI_HostAddress = http://localhost:5025
+
+GET {{CustomerUIAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
