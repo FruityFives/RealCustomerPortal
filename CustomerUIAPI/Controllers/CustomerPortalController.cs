@@ -7,13 +7,13 @@ namespace CustomerUIAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class CustomerPortalController : ControllerBase
     {
         private static List<Order> orders = new List<Order>();
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public OrderController(IHttpClientFactory httpClientFactory)
+        public CustomerPortalController(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
