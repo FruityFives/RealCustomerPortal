@@ -149,7 +149,7 @@
 
     private async Task SubmitOrder()
     {
-        var response = await Http.PostAsJsonAsync("http://localhost:5025/api/order/postorder", order);
+        var response = await Http.PostAsJsonAsync("http://localhost:5025/api/customerportal/postorder", order);
         message = response.IsSuccessStatusCode ? "✅ Ordren er sendt!" : "❌ Fejl ved afsendelse af ordre.";
     }
 

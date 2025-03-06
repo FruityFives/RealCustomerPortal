@@ -9,8 +9,7 @@
         public string CustomerAddress { get; set; } = string.Empty; // Kundens adresse
 
         public int CompanyId { get; set; } // Hvilken virksomhed ordren tilhører
-        public string CompanyName { get; set; } = string.Empty; // Navn på virksomheden - Bliver ikke brugt
-
+        
         public List<OrderItem> Items { get; set; } = new(); // Liste over produkter i ordren
         public DateTime OrderDate { get; set; } = DateTime.UtcNow; // Dato for bestilling
     }

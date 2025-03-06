@@ -38,17 +38,19 @@ namespace CustomerUIAPI.Controllers
             var client = _httpClientFactory.CreateClient("MyApiClient");
 
             // Send POST-anmodning med ordren til ekstern service
-            var response = await client.PostAsJsonAsync("orders", order);
+            var response = await client.PostAsJsonAsync("order/validate", order);
 
             if (response.IsSuccessStatusCode)
             {
                 // Ordren blev gemt korrekt i den eksterne service
-                return Ok();
+                return Ok("Ordre lavet");
             }
             else
             {
-                // Håndter fejl fra den eksterne service
-                return StatusCode((int)response.StatusCode, "Fejl ved oprettelse af ordre");
+                var errorResponse = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"Fejl ved oprettelse af ordre. Statuskode: {response.StatusCode}, Fejlbesked: {errorResponse}");
+                return StatusCode((int)response.StatusCode, $"Fejl ved oprettelse af ordre: {errorResponse}");
+
             }
         }
     }
