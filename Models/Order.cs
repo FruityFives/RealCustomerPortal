@@ -6,6 +6,7 @@
         public string CustomerName { get; set; } = string.Empty; // Kundens navn
         public string CustomerEmail { get; set; } = string.Empty; // Kundens e-mail
         public string CustomerPhone { get; set; } = string.Empty; // Kundens telefonnummer
+        public string CustomerAddress { get; set; } = string.Empty; // Kundens adresse
 
         public int CompanyId { get; set; } // Hvilken virksomhed ordren tilhører
         public string CompanyName { get; set; } = string.Empty; // Navn på virksomheden - Bliver ikke brugt
