@@ -15,6 +15,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient("MyApiClient", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["MyApiBaseUrl"] ??
+    throw new InvalidOperationException(
+    "MyApiBaseUrl is missing in configuration"));
+    client.DefaultRequestHeaders.Add("Authorization",
+    $"Bearer {builder.Configuration["MyApiToken"] ??
+    throw new InvalidOperationException(
+    "MyApiToken is missing in configuration")}");
+});
+
 var app = builder.Build();
 
 // Brug CORS overalt i API'et
