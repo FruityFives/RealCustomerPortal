@@ -38,7 +38,7 @@ namespace CustomerUIAPI.Controllers
             var client = _httpClientFactory.CreateClient("MyApiClient");
 
             // Send POST-anmodning med ordren til ekstern service
-            var response = await client.PostAsJsonAsync("order/validate", order);
+            var response = await client.PostAsJsonAsync("validate", order);
 
             if (response.IsSuccessStatusCode)
             {
